@@ -21,7 +21,7 @@ public:
     ~MainWindow() override;
 
     friend void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int iter_num);
-    friend QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY);
+    friend QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, double centerY);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -31,6 +31,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    double radius;
     int cur_iter;
 };
 #endif // MAINWINDOW_H

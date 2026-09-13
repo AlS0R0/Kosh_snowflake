@@ -5,6 +5,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , radius(100.0) //радиус описанной окружности для 0 итерации
     , cur_iter(0) //начальное значение (треугольник)
 {
     ui->setupUi(this);
@@ -43,11 +44,11 @@ void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int 
 }
 
 //построение снежинки Коха
-QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY) {
+QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, double centerY) {
     QPolygonF snowflake_dots;
 
     //радиус описанной окружности
-    double R = 200.0;
+    double R = radius_;
 
     //вычисляем координаты трех вершин для 1-ой итерации
     //верхняя вершина
@@ -81,7 +82,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     double centerX = width() / 2.0;
     double centerY = height() / 2.0;
 
-    QPolygonF Kosh_snowflake_ = Kosh_snowflake(cur_iter, centerX, centerY);
+    QPolygonF Kosh_snowflake_ = Kosh_snowflake(cur_iter, radius, centerX, centerY);
 
     painter.drawPolygon(Kosh_snowflake_);
 }
