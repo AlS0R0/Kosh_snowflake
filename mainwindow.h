@@ -25,5 +25,6 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    int iter_num;
 };
 #endif // MAINWINDOW_H

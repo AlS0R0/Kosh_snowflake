@@ -5,6 +5,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , iter_num(3) //тестовое значение
 {
     ui->setupUi(this);
 
@@ -16,10 +17,31 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
+QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY) {
     QPolygonF snowflake_dots;
 
+    //радиус описанной окружности
+    double R = 200.0;
+
+    //вычисляем координаты трех вершин для 1-ой итерации
+    //верхняя вершина
+    snowflake_dots << QPointF(centerX, centerY - R);
+
+    //правая нижняя вершина
+    snowflake_dots << QPointF(centerX + R * std::cos(330 * M_PI / 180.0),
+                              centerY - R * std::sin(330 * M_PI / 180.0));
+
+    //левая нижняя вершина
+    snowflake_dots << QPointF(centerX + R * std::cos(210 * M_PI / 180.0),
+                              centerY - R * std::sin(210 * M_PI / 180.0));
+
+    return snowflake_dots;
+}
+
+
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); //сглаживание линий
 
@@ -29,21 +51,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     double centerX = width() / 2.0;
     double centerY = height() / 2.0;
 
-    //радиус описанной окружности
-    double R = 200.0;
+    QPolygonF Kosh_snowflak = Kosh_snowflake(iter_num, centerX, centerY);
 
-    //вычисляем координаты трех вершин для 1-ой итерации
-    //верхняя вершина
-    snowflake_dots << QPointF(centerX, centerY - R);
-
-    //левая нижняя вершина
-    snowflake_dots << QPointF(centerX + R * std::cos(210 * M_PI / 180.0),
-                              centerY - R * std::sin(210 * M_PI / 180.0));
-
-    //правая нижняя вершина
-    snowflake_dots << QPointF(centerX + R * std::cos(330 * M_PI / 180.0),
-                              centerY - R * std::sin(330 * M_PI / 180.0));
-
-    painter.drawPolygon(snowflake_dots);
+    painter.drawPolygon(Kosh_snowflak);
 }
-
