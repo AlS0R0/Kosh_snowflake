@@ -5,13 +5,15 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , radius(100.0) //радиус описанной окружности для 0 итерации
+    , radius(50.0) //радиус описанной окружности для 0 итерации
     , cur_iter(0) //начальное значение (треугольник)
 {
     ui->setupUi(this);
 
     //привязываем слот изменения номера итерации
     connect(ui->iter_slider, &QSlider::valueChanged, this, &MainWindow::IterationChanged);
+    //привязываем слот изменения размера снежинки
+    connect(ui->size_slider, &QSlider::valueChanged, this, &MainWindow::SizeChanged);
 
     //название окна
     QString title_text = "Kosh snowflake, iteration: " + QString::number(cur_iter);
@@ -95,5 +97,11 @@ void MainWindow::IterationChanged(int value) {
     QString title_text = "Kosh snowflake, iteration: " + QString::number(cur_iter);
     setWindowTitle(title_text);
 
+    update();
+}
+
+//изменение размера снежинки
+void MainWindow::SizeChanged(int value) {
+    radius = static_cast<double>(value);
     update();
 }

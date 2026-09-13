@@ -28,6 +28,7 @@ protected:
 
 private slots:
     void IterationChanged(int value);
+    void SizeChanged(int value);
 
 private:
     Ui::MainWindow *ui;
