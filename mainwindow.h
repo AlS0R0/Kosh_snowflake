@@ -26,8 +26,11 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
 
+private slots:
+    void IterationChanged(int value);
+
 private:
     Ui::MainWindow *ui;
-    int it_num;
+    int cur_iter;
 };
 #endif // MAINWINDOW_H

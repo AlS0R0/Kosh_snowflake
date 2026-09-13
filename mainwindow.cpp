@@ -5,11 +5,16 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , it_num(9) //тестовое значение
+    , cur_iter(0) //начальное значение (треугольник)
 {
     ui->setupUi(this);
 
-    setWindowTitle("Kosh snowflake"); //название окна
+    //привязываем слот изменения номера итерации
+    connect(ui->iter_slider, &QSlider::valueChanged, this, &MainWindow::IterationChanged);
+
+    //название окна
+    QString title_text = "Kosh snowflake, iteration: " + QString::number(cur_iter);
+    setWindowTitle(title_text);
 }
 
 MainWindow::~MainWindow()
@@ -17,6 +22,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//рекурсивно строим треугольник (шип) на отрезке
 void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int iter_num) {
     if (iter_num <= 0) return;
     --iter_num;
@@ -36,6 +42,7 @@ void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int 
     Add_middle_dots(snowflake, c, secondd, iter_num);
 }
 
+//построение снежинки Коха
 QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY) {
     QPolygonF snowflake_dots;
 
@@ -62,7 +69,7 @@ QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY) {
     return snowflake_dots;
 }
 
-
+//отрисовка фигуры (с нахождением центра экрана)
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
@@ -74,7 +81,18 @@ void MainWindow::paintEvent(QPaintEvent *event)
     double centerX = width() / 2.0;
     double centerY = height() / 2.0;
 
-    QPolygonF Kosh_snowflak = Kosh_snowflake(it_num, centerX, centerY);
+    QPolygonF Kosh_snowflake_ = Kosh_snowflake(cur_iter, centerX, centerY);
 
-    painter.drawPolygon(Kosh_snowflak);
+    painter.drawPolygon(Kosh_snowflake_);
+}
+
+//изменение номера итерации снежинки Коха
+void MainWindow::IterationChanged(int value) {
+    cur_iter = value;
+
+    //изменяем название окна
+    QString title_text = "Kosh snowflake, iteration: " + QString::number(cur_iter);
+    setWindowTitle(title_text);
+
+    update();
 }

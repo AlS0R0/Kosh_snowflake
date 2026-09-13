@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSlider" name="horizontalSlider">
+   <widget class="QSlider" name="iter_slider">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -34,6 +34,9 @@
     </property>
     <property name="statusTip">
      <string/>
+    </property>
+    <property name="maximum">
+     <number>10</number>
     </property>
     <property name="orientation">
      <enum>Qt::Orientation::Horizontal</enum>
