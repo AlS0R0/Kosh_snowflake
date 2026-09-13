@@ -20,11 +20,14 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    friend void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int iter_num);
+    friend QPolygonF Kosh_snowflake(int iteration_num, double centerX, double centerY);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
-    int iter_num;
+    int it_num;
 };
 #endif // MAINWINDOW_H
