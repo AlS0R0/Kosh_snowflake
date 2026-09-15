@@ -57,10 +57,10 @@ QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, doub
     QPointF f(centerX, centerY - R);
 
     //правая нижняя вершина
-    QPointF t(centerX + R * std::cos(330 * M_PI / 180.0), centerY - R * std::sin(330 * M_PI / 180.0));
+    QPointF t(centerX + R * std::cos(30 * M_PI / 180.0), centerY + R * std::sin(30 * M_PI / 180.0));
 
     //левая нижняя вершина
-    QPointF s(centerX + R * std::cos(210 * M_PI / 180.0), centerY - R * std::sin(210 * M_PI / 180.0));
+    QPointF s(centerX - R * std::cos(30 * M_PI / 180.0), centerY + R * std::sin(30 * M_PI / 180.0));
 
     snowflake_dots << f;
     Add_middle_dots(snowflake_dots, f, s, iteration_num);
