@@ -20,8 +20,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
-    friend void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int iter_num);
-    friend QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, double centerY);
+    friend void Add_middle_dots(QPainter& painter, QPolygonF& snowflake,
+                                QPointF firstd, QPointF secondd, int iter_num, double& min_dev_pixel);
+    friend QPolygonF Kosh_snowflake(QPainter& painter,int iteration_num,
+                                    double radius_, double centerX, double centerY, const double& min_dev_pixel);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -34,5 +36,6 @@ private:
     Ui::MainWindow *ui;
     double radius;
     int cur_iter;
+    const double min_dev_pixel = 0.5; //размер пикселя экрана
 };
 #endif // MAINWINDOW_H

@@ -36,7 +36,7 @@
      <string/>
     </property>
     <property name="maximum">
-     <number>10</number>
+     <number>100</number>
     </property>
     <property name="orientation">
      <enum>Qt::Orientation::Horizontal</enum>
@@ -67,7 +67,7 @@
      <number>50</number>
     </property>
     <property name="maximum">
-     <number>400</number>
+     <number>1000</number>
     </property>
     <property name="orientation">
      <enum>Qt::Orientation::Horizontal</enum>

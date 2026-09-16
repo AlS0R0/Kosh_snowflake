@@ -26,8 +26,14 @@ MainWindow::~MainWindow()
 }
 
 //рекурсивно строим треугольник (шип) на отрезке
-void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int iter_num) {
-    if (iter_num <= 0) return;
+void Add_middle_dots(QPainter& painter, QPolygonF& snowflake,
+                     QPointF& firstd, QPointF& secondd, int iter_num, const double& min_dev_pixel) {
+
+    QPointF d1 = painter.deviceTransform().map(firstd); //значение в пикселях первой точки
+    QPointF d2 = painter.deviceTransform().map(secondd); //значение в пикселях второй точки
+    double deviceLength = QLineF(d1, d2).length(); //расстояние в пикселях
+
+    if (iter_num <= 0 || deviceLength < min_dev_pixel) return;
     --iter_num;
 
     //ищем три точки нового треугольника на отрезке
@@ -36,17 +42,18 @@ void Add_middle_dots(QPolygonF& snowflake, QPointF firstd, QPointF secondd, int 
     QPointF b((a.x()+c.x())/2 - sqrt(3)*(c.y()-a.y())/2, (a.y()+c.y())/2 + sqrt(3)*(c.x()-a.x())/2);
 
     //входим в рекурсию для новых отрезков
-    Add_middle_dots(snowflake, firstd, a, iter_num);
+    Add_middle_dots(painter, snowflake, firstd, a, iter_num, min_dev_pixel);
     snowflake << a;
-    Add_middle_dots(snowflake, a, b, iter_num);
+    Add_middle_dots(painter, snowflake, a, b, iter_num, min_dev_pixel);
     snowflake << b;
-    Add_middle_dots(snowflake, b, c, iter_num);
+    Add_middle_dots(painter, snowflake, b, c, iter_num, min_dev_pixel);
     snowflake << c;
-    Add_middle_dots(snowflake, c, secondd, iter_num);
+    Add_middle_dots(painter, snowflake, c, secondd, iter_num, min_dev_pixel);
 }
 
 //построение снежинки Коха
-QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, double centerY) {
+QPolygonF Kosh_snowflake(QPainter& painter, int iteration_num,
+                         double radius_, double centerX, double centerY, const double& min_dev_pixel) {
     QPolygonF snowflake_dots;
 
     //радиус описанной окружности
@@ -63,11 +70,11 @@ QPolygonF Kosh_snowflake(int iteration_num, double radius_, double centerX, doub
     QPointF s(centerX - R * std::cos(30 * M_PI / 180.0), centerY + R * std::sin(30 * M_PI / 180.0));
 
     snowflake_dots << f;
-    Add_middle_dots(snowflake_dots, f, s, iteration_num);
+    Add_middle_dots(painter, snowflake_dots, f, s, iteration_num, min_dev_pixel);
     snowflake_dots << s;
-    Add_middle_dots(snowflake_dots, s, t, iteration_num);
+    Add_middle_dots(painter, snowflake_dots, s, t, iteration_num, min_dev_pixel);
     snowflake_dots << t;
-    Add_middle_dots(snowflake_dots, t, f, iteration_num);
+    Add_middle_dots(painter, snowflake_dots, t, f, iteration_num, min_dev_pixel);
 
     return snowflake_dots;
 }
@@ -78,13 +85,13 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); //сглаживание линий
 
-    painter.setPen(QPen(Qt::red, 2)); //выбор цвета и толщины
+    painter.setPen(QPen(Qt::red, 1)); //выбор цвета и толщины
 
     //ищем координаты середины окна
     double centerX = width() / 2.0;
     double centerY = height() / 2.0;
 
-    QPolygonF Kosh_snowflake_ = Kosh_snowflake(cur_iter, radius, centerX, centerY);
+    QPolygonF Kosh_snowflake_ = Kosh_snowflake(painter, cur_iter, radius, centerX, centerY, min_dev_pixel);
 
     painter.drawPolygon(Kosh_snowflake_);
 }
